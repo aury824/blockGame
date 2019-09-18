@@ -13,6 +13,7 @@ var myGameArea = {
     message : {
         docIsReady : "문서가 준비되었습니다."
     },
+    // context
     start : function(){
         this.canvas.width = 480;
         this.canvas.height = 270;
@@ -20,7 +21,11 @@ var myGameArea = {
         document.body.insertBefore(this.canvas,document.body.childNodes[0]);
         // var ctx = myGameArea.canvas.getContext("2d");
         this.context = this.canvas.getContext("2d");  
-
+        // 타이머 적용
+        this.interval = setInterval(updateGameArea, 20); //초당 50번 updateGameArea를 호출
+    },
+    clear : function(){
+        this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     }
 }
 
@@ -31,8 +36,17 @@ function Component(w, h, c, x, y){
     this.c = c;
     this.w = w;
     this.h = h;
-    ctx = myGameArea.context ;
-    ctx.fillStyle = c;
-    ctx.fillRect(this.x,this.y,this.w,this.h);
+    // 외부 실행을 위해 함수에 포함
+    this.update = function(){
+        ctx = myGameArea.context ;
+        ctx.fillStyle = c;
+        ctx.fillRect(this.x,this.y,this.w,this.h);
+    }
+}
 
+// 화면 제어를 위한 함수
+function updateGameArea(){
+    myGameArea.clear();
+    myGamePiece.x += 1;
+    myGamePiece.update();
 }
