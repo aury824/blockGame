@@ -13,7 +13,6 @@ var myGameArea = {
     message : {
         docIsReady:  "문서가 준비되었습니다."
     },
-    key: false,
     // context
     start : function() {
         this.canvas.width = 480;
@@ -32,10 +31,15 @@ var myGameArea = {
         this.btns[3].addEventListener("mousedown", moveDown);
         this.btns[3].addEventListener("mouseup", moveStop);
         window.addEventListener('keydown', function(e){
-            myGameArea.key = e.keyCode;
+            //myGameArea에 keys 배열이 없으면 새로만들고
+            myGameArea.keys =(myGameArea.keys || []);
+            // true
+            myGameArea.keys[e.keyCode] = (e.type == "keydown");
         });
         window.addEventListener('keyup', function(e){
-            myGameArea.key = false;
+            //false
+            myGameArea.keys[e.keyCode] = (e.type == "keydown");
+            moveStop();
         });
     },
     clear : function() {
@@ -86,14 +90,14 @@ function moveStop() {
 
 // 화면제어를 위한 함수
 function updateGameArea() {
-    var mGAkey = myGameArea.key;
+    var mGAkeys = myGameArea.keys;
     myGameArea.clear();
     // myGamePiece.x += 1
-    if(mGAkey && mGAkey === 37) { myGamePiece.speedX = -1; }
-    if(mGAkey && mGAkey === 39) myGamePiece.speedX = 1;
-    if(mGAkey && mGAkey === 38) myGamePiece.speedY = -1;
-    if(mGAkey && mGAkey === 40) myGamePiece.speedY = 1;
-    if(!mGAkey) moveStop();
+    if(mGAkeys && mGAkeys [37]) { myGamePiece.speedX = -1; }
+    if(mGAkeys && mGAkeys [39]) myGamePiece.speedX = 1;
+    if(mGAkeys && mGAkeys [38]) myGamePiece.speedY = -1;
+    if(mGAkeys && mGAkeys [40]) myGamePiece.speedY = 1;
+    if(!mGAkeys) moveStop();
     myGamePiece.newPos();
     myGamePiece.update();
 }
